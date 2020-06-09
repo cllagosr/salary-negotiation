@@ -13,7 +13,9 @@
         </BaseButton>
       </div>
     </form>
-    <Modal v-if="showModal" @close="showModal=false"/>
+    <Modal v-if="showModal" @close="showModal=false">
+      <WeatherWidget place="London" temperature="17°C"/>
+    </Modal>
   </div>
 </template>
 
@@ -21,6 +23,7 @@
 import BaseButton from '@/components/BaseButton.vue'
 import BaseInput from '@/components/BaseInput.vue'
 import Modal from '@/components/Modal.vue'
+import WeatherWidget from '@/components/WeatherWidget.vue'
 import formValidation from '@/mixins/formValidation'
 
 export default {
@@ -29,7 +32,8 @@ export default {
   components: {
     BaseButton,
     BaseInput,
-    Modal
+    Modal,
+    WeatherWidget
   },
   props: {
     label: {
