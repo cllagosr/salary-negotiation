@@ -1,22 +1,26 @@
 <template>
-  <form class="sn-form">
-    <BaseInput @input="handleInput"
-      :label="label"
-      :valid="formError.isValid"
-      v-model="salary"
-      :error-message="formError.message"
-    />
-    <div class="sn-form__button">
-      <BaseButton :disabled="!formError.isValid" @click="handleSubmit">
-        Submit
-      </BaseButton>
-    </div>
-  </form>
+  <div>
+    <form class="sn-form">
+      <BaseInput @input="handleInput"
+        :label="label"
+        :valid="formError.isValid"
+        v-model="salary"
+        :error-message="formError.message"
+      />
+      <div class="sn-form__button">
+        <BaseButton :disabled="!formError.isValid" @click="handleSubmit">
+          Submit
+        </BaseButton>
+      </div>
+    </form>
+    <Modal v-if="showModal" @close="showModal=false"/>
+  </div>
 </template>
 
 <script>
 import BaseButton from '@/components/BaseButton.vue'
 import BaseInput from '@/components/BaseInput.vue'
+import Modal from '@/components/Modal.vue'
 import formValidation from '@/mixins/formValidation'
 
 export default {
@@ -24,7 +28,8 @@ export default {
   mixins: [formValidation],
   components: {
     BaseButton,
-    BaseInput
+    BaseInput,
+    Modal
   },
   props: {
     label: {
@@ -35,6 +40,7 @@ export default {
   data () {
     return {
       salary: '',
+      showModal: false,
       formError: {
         isValid: false,
         message: ''
@@ -47,6 +53,7 @@ export default {
     },
     handleSubmit (event) {
       event.preventDefault()
+      this.showModal = true
       if (this.formError.isValid) {
         // value is ready
       }
