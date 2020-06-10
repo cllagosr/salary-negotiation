@@ -5,25 +5,21 @@
         :label="label"
         :valid="formError.isValid"
         v-model="salary"
+        v-show="showInput"
         :error-message="formError.message"
       />
       <div class="sn-form__button">
-        <BaseButton :disabled="!formError.isValid" @click="handleSubmit">
+        <BaseButton :disabled="isButtonDisabled" @click="handleSubmit">
           Submit
         </BaseButton>
       </div>
     </form>
-    <Modal v-if="showModal" @close="showModal=false">
-      <WeatherWidget place="London" temperature="17°C"/>
-    </Modal>
   </div>
 </template>
 
 <script>
 import BaseButton from '@/components/BaseButton.vue'
 import BaseInput from '@/components/BaseInput.vue'
-import Modal from '@/components/Modal.vue'
-import WeatherWidget from '@/components/WeatherWidget.vue'
 import formValidation from '@/mixins/formValidation'
 
 export default {
@@ -31,20 +27,26 @@ export default {
   mixins: [formValidation],
   components: {
     BaseButton,
-    BaseInput,
-    Modal,
-    WeatherWidget
+    BaseInput
   },
   props: {
     label: {
       type: String,
       default: 'Salary'
+    },
+    showInput: {
+      type: Boolean,
+      default: true
+    }
+  },
+  computed: {
+    isButtonDisabled: function () {
+      return !this.formError.isValid || this.showInput === false
     }
   },
   data () {
     return {
       salary: '',
-      showModal: false,
       formError: {
         isValid: false,
         message: ''
@@ -57,9 +59,9 @@ export default {
     },
     handleSubmit (event) {
       event.preventDefault()
-      this.showModal = true
+
       if (this.formError.isValid) {
-        // value is ready
+        this.$emit('submit', this.salary)
       }
     }
   }
