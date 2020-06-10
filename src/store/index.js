@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import { roles } from '@/constants'
+import fetchWeather from '@/shared/fetchWeather'
 
 Vue.use(Vuex)
 
@@ -9,20 +10,11 @@ export default new Vuex.Store({
     salary: {
       [roles.EMPLOYER]: '',
       [roles.EMPLOYEE]: ''
-    }
-  },
-  getters: {
-    areSalariesFilled: (state) => {
-      return !!(state.salary[roles.EMPLOYER] && state.salary[roles.EMPLOYEE])
     },
-    getMatchText: (state) => {
-      const employeeSalary = parseInt(state.salary[roles.EMPLOYEE])
-      const employerSalary = parseInt(state.salary[roles.EMPLOYER])
-
-      if (employeeSalary <= employerSalary) {
-        return 'Success'
-      }
-      return 'Failure'
+    weather: {
+      temperature: '',
+      pending: false,
+      failed: false
     }
   },
   mutations: {
@@ -37,9 +29,27 @@ export default new Vuex.Store({
         [roles.EMPLOYER]: '',
         [roles.EMPLOYEE]: ''
       }
+    },
+    setErrorWeather (state) {
+      state.weather = { ...state.weather, pending: false, failed: true }
+    },
+    requestWeather (state) {
+      state.weather = { ...state.weather, pending: true, failed: false }
+    },
+    receiveWeather (state, { temperature }) {
+      state.weather = { temperature, pending: false, failed: false }
     }
   },
   actions: {
+    async getWeather ({ commit }) {
+      commit('requestWeather')
+      try {
+        const temperature = await fetchWeather()
+        commit('receiveWeather', { temperature })
+      } catch (e) {
+        commit('setErrorWeather')
+      }
+    }
   },
   modules: {
   }

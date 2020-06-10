@@ -7,17 +7,23 @@
     <keep-alive>
       <router-view/>
     </keep-alive>
-    <Modal v-if="$store.getters.areSalariesFilled" @close="handleClose">
-      {{$store.getters.getMatchText}}!.
+    <Modal v-if="areSalariesFilled"
+      @close="handleModalClose"
+      @open="handleModalOpen"
+    >
+      {{getMatchText}}!.
       Employer input: {{employerSalary}},
       employee input: {{employeeSalary}}
-      <WeatherWidget place="London" temperature="17°C"/>
+      <WeatherWidget place="London"
+        :isLoading="weather.pending"
+        :failed="weather.failed"
+        :temperature="weather.temperature"/>
     </Modal>
   </div>
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapMutations, mapActions } from 'vuex'
 import Modal from '@/components/Modal.vue'
 import WeatherWidget from '@/components/WeatherWidget.vue'
 import { roles } from '@/constants'
@@ -27,13 +33,33 @@ export default {
     Modal,
     WeatherWidget
   },
-  computed: mapState({
-    employerSalary: state => state.salary[roles.EMPLOYER],
-    employeeSalary: state => state.salary[roles.EMPLOYEE]
-  }),
+  computed: {
+    ...mapState({
+      weather: 'weather',
+      employerSalary: state => state.salary[roles.EMPLOYER],
+      employeeSalary: state => state.salary[roles.EMPLOYEE]
+    }),
+    areSalariesFilled () {
+      return !!(this.employerSalary && this.employeeSalary)
+    },
+    getMatchText () {
+      const employerSalary = parseInt(this.employerSalary)
+      const employeeSalary = parseInt(this.employeeSalary)
+
+      if (employeeSalary <= employerSalary) {
+        return 'Success'
+      }
+      return 'Failure'
+    }
+  },
   methods: {
-    handleClose () {
-      this.$store.commit('resetSalary')
+    ...mapMutations(['resetSalary']),
+    ...mapActions(['getWeather']),
+    handleModalClose () {
+      this.resetSalary()
+    },
+    handleModalOpen () {
+      this.getWeather()
     }
   }
 }

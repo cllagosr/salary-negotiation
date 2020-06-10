@@ -27,6 +27,9 @@ export default {
   components: {
     BaseButton
   },
+  created: function () {
+    this.$emit('open')
+  },
   methods: {
     close () {
       this.$emit('close')
