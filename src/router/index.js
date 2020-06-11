@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import EmployerForm from '../views/EmployerForm.vue'
+import SalaryForm from '../views/SalaryForm.vue'
 
 Vue.use(VueRouter)
 
@@ -8,7 +8,8 @@ const routes = [
   {
     path: '/',
     name: 'Employer',
-    component: EmployerForm
+    component: SalaryForm,
+    props: { role: 'employer' }
   },
   {
     path: '/employee',
@@ -16,7 +17,8 @@ const routes = [
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/EmployeeForm.vue')
+    component: SalaryForm,
+    props: { role: 'employee' }
   }
 ]
 

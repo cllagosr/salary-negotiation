@@ -5,7 +5,7 @@
       <router-link to="/employee">Employee</router-link>
     </div>
     <keep-alive>
-      <router-view/>
+      <router-view :key="$route.path"/>
     </keep-alive>
     <Modal v-if="areSalariesFilled"
       @close="handleModalClose"

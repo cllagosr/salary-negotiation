@@ -4,8 +4,8 @@
       <BaseInput @input="handleInput"
         :label="label"
         :valid="formError.isValid"
-        v-model="salary"
-        v-show="showInput"
+        v-model="salaryInput"
+        v-if="isInputVisible"
         :error-message="formError.message"
       />
       <div class="sn-form__button">
@@ -34,19 +34,22 @@ export default {
       type: String,
       default: 'Salary'
     },
-    showInput: {
-      type: Boolean,
-      default: true
+    role: {
+      type: String,
+      required: true
     }
   },
   computed: {
     isButtonDisabled: function () {
-      return !this.formError.isValid || this.showInput === false
+      return !this.formError.isValid || !this.isInputVisible
+    },
+    isInputVisible: function () {
+      return !this.$store.state.salary[this.role]
     }
   },
   data () {
     return {
-      salary: '',
+      salaryInput: '',
       formError: {
         isValid: false,
         message: ''
@@ -55,13 +58,13 @@ export default {
   },
   methods: {
     handleInput () {
-      this.formError = this.verifyInput(['required', 'number'], this.salary)
+      this.formError = this.verifyInput(['required', 'number'], this.salaryInput)
     },
     handleSubmit (event) {
       event.preventDefault()
 
       if (this.formError.isValid) {
-        this.$emit('submit', this.salary)
+        this.$store.commit('setSalary', { value: this.salaryInput, role: this.role })
       }
     }
   }
