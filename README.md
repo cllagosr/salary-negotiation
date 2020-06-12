@@ -1,6 +1,6 @@
 # salary-negotiation
 
-Add the open weather map api key to your `.env.local` file before running the app.
+Add the open weather map api key to your `.env.local` file before running the app. Using `VUE_APP_WEATHER_API_KEY={your_api_key}`
 
 ## Project setup
 ```
