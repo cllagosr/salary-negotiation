@@ -1,5 +1,7 @@
 # salary-negotiation
 
+Add the open weather map api key to your `.env.local` file before running the app.
+
 ## Project setup
 ```
 npm install
